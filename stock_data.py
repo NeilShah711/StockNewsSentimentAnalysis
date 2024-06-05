@@ -71,8 +71,6 @@ def main():
         else:
             st.write("Stock not found.")
 
-
-
 if __name__ == "__main__":
     main()
 
