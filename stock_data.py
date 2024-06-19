@@ -149,11 +149,11 @@ def main():
             pattern_result = recognize_pattern(data)
             if pattern_result["bullish"]:
                 st.write("Bullish Patterns Detected:")
-                st.write(", ".join(pattern_result["bullish"]))
+                st.write("Number of Bullish Patterns:", len(pattern_result["bullish"]))
                 plot_candlestick(data, "Bullish Candlestick Patterns")
-            elif pattern_result["bearish"]:
+            if pattern_result["bearish"]:
                 st.write("Bearish Patterns Detected:")
-                st.write(", ".join(pattern_result["bearish"]))
+                st.write("Number of Bearish Patterns:", len(pattern_result["bearish"]))
                 plot_candlestick(data, "Bearish Candlestick Patterns")
             else:
                 st.write("No significant pattern detected.")
@@ -162,44 +162,44 @@ def main():
         if stock:
             st.write("News")
             googlenews = GoogleNews()
-            news = googlenews.search(symbol)
+            news = googlenews.search(f"{symbol} stock price OR market OR performance OR earnings OR financial OR news", when='1d')
             articles = news['entries']
             
             st.write(f"Total Number of Articles: {len(articles)}")  # Total number of articles
             
             # Initialize sentiment analysis pipeline
-            sentiment_analysis = pipeline("sentiment-analysis")
+            # sentiment_analysis = pipeline("sentiment-analysis")
             
-            sentiments = {'positive': 0, 'neutral': 0, 'negative': 0}
+            # sentiments = {'positive': 0, 'neutral': 0, 'negative': 0}
             
-            for item in articles:
-                st.write("Title:", item['title'])
-                st.write("Link:", item['link'])
-                st.write("Published:", item['published'])
+            # for item in articles:
+            #     st.write("Title:", item['title'])
+            #     st.write("Link:", item['link'])
+            #     st.write("Published:", item['published'])
 
-                # Fetch full article content
-                full_content = fetch_full_article(item['link'])
-                st.write("Content:", full_content[:500])  # Display first 500 characters of the content
+            #     # Fetch full article content
+            #     full_content = fetch_full_article(item['link'])
+            #     st.write("Content:", full_content[:500])  # Display first 500 characters of the content
 
-                # Analyze sentiment of the full content using Hugging Face
-                sentiment_score = sentiment_analysis(full_content[:512])[0]  # Truncate to first 512 characters for analysis
-                st.write("Sentiment:", sentiment_score['label'], "-", sentiment_score['score'])
+            #     # Analyze sentiment of the full content using Hugging Face
+            #     sentiment_score = sentiment_analysis(full_content[:512])[0]  # Truncate to first 512 characters for analysis
+            #     st.write("Sentiment:", sentiment_score['label'], "-", sentiment_score['score'])
                 
-                # Count sentiment
-                if sentiment_score['label'] == 'POSITIVE':
-                    sentiments['positive'] += 1
-                elif sentiment_score['label'] == 'NEGATIVE':
-                    sentiments['negative'] += 1
-                else:
-                    sentiments['neutral'] += 1
+            #     # Count sentiment
+            #     if sentiment_score['label'] == 'POSITIVE':
+            #         sentiments['positive'] += 1
+            #     elif sentiment_score['label'] == 'NEGATIVE':
+            #         sentiments['negative'] += 1
+            #     else:
+            #         sentiments['neutral'] += 1
                 
-                st.write("")
+            #     st.write("")
 
-            # Plot sentiment distribution as a pie chart
-            fig, ax = plt.subplots()
-            ax.pie(sentiments.values(), labels=sentiments.keys(), autopct='%1.1f%%', colors=['green', 'blue', 'red'])
-            ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-            st.pyplot(fig)
+            # # Plot sentiment distribution as a pie chart
+            # fig, ax = plt.subplots()
+            # ax.pie(sentiments.values(), labels=sentiments.keys(), autopct='%1.1f%%', colors=['green', 'blue', 'red'])
+            # ax.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+            # st.pyplot(fig)
 
             vader_analyzer = SentimentIntensityAnalyzer()
             
@@ -219,9 +219,9 @@ def main():
                 st.write("Sentiment:", sentiment_score)
 
                 # Count sentiment
-                if sentiment_score['compound'] >= 0.05:
+                if sentiment_score['compound'] >= 0.70:
                     sentiments['positive'] += 1
-                elif sentiment_score['compound'] <= -0.05:
+                elif sentiment_score['compound'] < 0.00:
                     sentiments['negative'] += 1
                 else:
                     sentiments['neutral'] += 1
