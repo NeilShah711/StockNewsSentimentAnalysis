@@ -60,6 +60,7 @@ def plot_technical_indicators(data):
     fig.layout.update(title_text="Technical Indicators", xaxis_rangeslider_visible=True)
     st.plotly_chart(fig, use_container_width=True)
 
+
 def fetch_full_article(url):
     try:
         article = Article(url)
